@@ -8,18 +8,18 @@ pipeline {
                 bat "echo 'Git Checkout Finished'"
             }
         }     
-        stage("Build"){
-            steps {
-                bat "echo 'Build Started'"
-                bat "docker build -t yoga3911/hello-world ."
-                bat "echo 'Build Finished'"
-            }
-        }
         stage("Test"){
             steps {
                 bat "echo 'Test Started'"
                 bat "go test ./test"
                 bat "echo 'Test Finished'"
+            }
+        }
+        stage("Build"){
+            steps {
+                bat "echo 'Build Started'"
+                bat "docker build -t yoga3911/hello-world ."
+                bat "echo 'Build Finished'"
             }
         }
         stage("Deploy"){
