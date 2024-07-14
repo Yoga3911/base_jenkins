@@ -31,7 +31,7 @@ pipeline {
             steps {
                 bat "echo 'Push Image Started'"
                 withCredentials([usernamePassword(credentialsId: DOCKERHUB_CREDENTIALS, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    bat 'docker login -u $USERNAME -p $PASSWORD'
+                    // bat 'docker login -u $USERNAME -p $PASSWORD'
                     bat "echo 'docker login -u $USERNAME -p $PASSWORD'"
                     bat "docker push yoga3911/hello-world:$IMAGE_TAG"
                 }
