@@ -3,7 +3,7 @@ pipeline {
     environment{
         // DOCKERHUB_CREDENTIALS = 'DOCKERHUB_CREDENTIALS'
         IMAGE_NAME = 'yoga3911/hello-world'
-        IMAGE_TAG = '1.0.0'
+        IMAGE_TAG = '2.0.0'
         CONTAINER_NAME = 'hello-world'
         CONTAINER_PORT = '3000:3000'
     }
