@@ -40,7 +40,7 @@ pipeline {
             steps {
                 bat "echo 'Push Image Started'"
                 withDockerRegistry("https://registry-1.docker.io/v2/", 'DOCKERHUB_CREDENTIALS') {
-                    image("${IMAGE_NAME}:${IMAGE_TAG}").push()                    
+                    docker.image("${IMAGE_NAME}:${IMAGE_TAG}").push()                    
                 }
                 // withCredentials([usernamePassword(credentialsId: DOCKERHUB_CREDENTIALS, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                 //     bat "docker login -u ${USERNAME} -p ${PASSWORD}"
@@ -54,7 +54,7 @@ pipeline {
                 bat "echo 'Pull Image Started'"
                 // bat "docker pull ${IMAGE_NAME}:${IMAGE_TAG}"
                 withDockerRegistry("https://registry-1.docker.io/v2/", 'DOCKERHUB_CREDENTIALS') {
-                    image("${IMAGE_NAME}:${IMAGE_TAG}").pull()                    
+                    docker.image("${IMAGE_NAME}:${IMAGE_TAG}").pull()                    
                 }
                 bat "echo 'Pull Image Finished'"
             }
