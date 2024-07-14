@@ -13,7 +13,7 @@ pipeline {
                 bat "echo 'Git Checkout Finished'"
             }
         }     
-        stage("Test Code"){
+        stage("Unit Test"){
             steps {
                 bat "echo 'Test Started'"
                 bat "go test ./test"
@@ -31,7 +31,7 @@ pipeline {
             steps {
                 bat "echo 'Push Image Started'"
                 withCredentials([usernamePassword(credentialsId: DOCKERHUB_CREDENTIALS, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    // bat 'docker login -u $USERNAME -p $PASSWORD'
+                    bat 'docker login -u yoga3911 -p yyooggaa2020'
                     bat "echo 'docker login -u $USERNAME -p $PASSWORD'"
                     bat "docker push yoga3911/hello-world:$IMAGE_TAG"
                 }
