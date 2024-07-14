@@ -3,7 +3,7 @@ pipeline {
     environment{
         // DOCKERHUB_CREDENTIALS = 'DOCKERHUB_CREDENTIALS'
         IMAGE_NAME = 'yoga3911/hello-world'
-        IMAGE_TAG = '2.0.0'
+        IMAGE_TAG = 'latest'
         CONTAINER_NAME = 'hello-world'
         CONTAINER_PORT = '3000:3000'
     }
@@ -71,8 +71,8 @@ pipeline {
         stage("Deploy"){
             steps {
                 bat "echo 'Deploy Started'"
-                bat "docker stop hello-world"
-                bat "docker rm hello-world"
+                bat "docker stop ${CONTAINER_NAME} || true"
+                bat "docker rm ${CONTAINER_NAME} || true"
                 bat "docker run --name=${CONTAINER_NAME} -d -p ${CONTAINER_PORT} ${IMAGE_NAME}:${IMAGE_TAG}"
                 bat "echo 'Deploy Finished'"
             }
