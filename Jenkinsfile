@@ -8,12 +8,12 @@ pipeline {
         }     
         stage("Build"){
             steps {
-                sh "docker build -t yoga3911/hello-world ."
+                bat "docker build -t yoga3911/hello-world ."
             }
         }
         stage("Deploy"){
             steps {
-                sh "echo 'Deploying the application'"
+                bat "echo 'Deploying the application'"
             }
         }
     }
