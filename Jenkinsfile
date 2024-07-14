@@ -33,7 +33,7 @@ pipeline {
             steps {
                 bat "echo 'Push Image Started'"
                 withCredentials([usernamePassword(credentialsId: DOCKERHUB_CREDENTIALS, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    bat 'docker login -u $USERNAME -p $PASSWORD'
+                    bat "docker login -u ${USERNAME} -p ${PASSWORD}"
                     bat "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
                 }
                 bat "echo 'Push Image Finished'"
