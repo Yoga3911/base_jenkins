@@ -73,8 +73,10 @@ pipeline {
         stage("Deploy"){
             steps {
                 bat "echo 'Deploy Started'"
-                bat "docker stop ${CONTAINER_NAME} || true"
-                bat "docker rm ${CONTAINER_NAME} || true"
+                catchError {
+                    bat "docker stop ${CONTAINER_NAME}"
+                    bat "docker rm ${CONTAINER_NAME}"
+                }
                 // bat "docker run --name=${CONTAINER_NAME} -d -p ${CONTAINER_PORT} ${IMAGE_NAME}:${IMAGE_TAG}"
                 script {
                         docker.withRegistry("https://registry-1.docker.io/v2/", 'DOCKERHUB_CREDENTIALS') {
