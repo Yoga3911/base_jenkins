@@ -53,8 +53,10 @@ pipeline {
             steps {
                 bat "echo 'Pull Image Started'"
                 // bat "docker pull ${IMAGE_NAME}:${IMAGE_TAG}"
-                withDockerRegistry("https://registry-1.docker.io/v2/", 'DOCKERHUB_CREDENTIALS') {
-                    docker.image("${IMAGE_NAME}:${IMAGE_TAG}").pull()                    
+                script {
+                        docker.withRegistry("https://registry-1.docker.io/v2/", 'DOCKERHUB_CREDENTIALS') {
+                        docker.image("${IMAGE_NAME}:${IMAGE_TAG}").pull()                    
+                    }
                 }
                 bat "echo 'Pull Image Finished'"
             }
