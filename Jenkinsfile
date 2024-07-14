@@ -39,8 +39,10 @@ pipeline {
         stage("Push Image"){
             steps {
                 bat "echo 'Push Image Started'"
-                withDockerRegistry("https://registry-1.docker.io/v2/", 'DOCKERHUB_CREDENTIALS') {
-                    docker.image("${IMAGE_NAME}:${IMAGE_TAG}").push()                    
+                script {
+                        docker.withRegistry("https://registry-1.docker.io/v2/", 'DOCKERHUB_CREDENTIALS') {
+                        docker.image("${IMAGE_NAME}:${IMAGE_TAG}").push()                    
+                    }
                 }
                 // withCredentials([usernamePassword(credentialsId: DOCKERHUB_CREDENTIALS, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                 //     bat "docker login -u ${USERNAME} -p ${PASSWORD}"
