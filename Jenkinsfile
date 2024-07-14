@@ -32,7 +32,12 @@ pipeline {
         stage("Build Image"){
             steps {
                 bat "echo 'Build Started'"
-                bat "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                // bat "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+                script {
+                        docker.withRegistry("https://registry-1.docker.io/v2/", 'DOCKERHUB_CREDENTIALS') {
+                        docker.build("${IMAGE_NAME}:${IMAGE_TAG}")                  
+                    }
+                }
                 bat "echo 'Build Finished'"
             }
         }
