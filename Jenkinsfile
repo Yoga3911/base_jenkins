@@ -3,7 +3,7 @@ pipeline {
     stages {
         stage("Checkout"){
             steps {
-                git branch: 'master', credentialsId: 'SSH', url: 'https://github.com/Yoga3911/go-test-api'
+                git branch: 'master', credentialsId: 'Yoga-SSH', url: 'git@github.com:Yoga3911/go-test-api.git'
             }
         }     
         stage("Build"){
