@@ -3,7 +3,7 @@ pipeline {
     environment{
         // DOCKERHUB_CREDENTIALS = 'DOCKERHUB_CREDENTIALS'
         IMAGE_NAME = 'yoga3911/hello-world'
-        IMAGE_TAG = 'latest'
+        IMAGE_TAG = '3.0.0'
         CONTAINER_NAME = 'hello-world'
         CONTAINER_PORT = '3000:3000'
     }
@@ -35,7 +35,7 @@ pipeline {
                 // bat "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
                 script {
                         docker.withRegistry("https://registry-1.docker.io/v2/", 'DOCKERHUB_CREDENTIALS') {
-                        docker.build("${IMAGE_NAME}:${IMAGE_TAG}")                  
+                        image = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")                  
                     }
                 }
                 bat "echo 'Build Finished'"
@@ -46,7 +46,9 @@ pipeline {
                 bat "echo 'Push Image Started'"
                 script {
                         docker.withRegistry("https://registry-1.docker.io/v2/", 'DOCKERHUB_CREDENTIALS') {
-                        docker.image("${IMAGE_NAME}:${IMAGE_TAG}").push()                    
+                        // docker.image("${IMAGE_NAME}:${IMAGE_TAG}").push()                    
+                        image.push()                    
+                        // image.push("latest")                    
                     }
                 }
                 // withCredentials([usernamePassword(credentialsId: DOCKERHUB_CREDENTIALS, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
@@ -62,7 +64,7 @@ pipeline {
                 // bat "docker pull ${IMAGE_NAME}:${IMAGE_TAG}"
                 script {
                         docker.withRegistry("https://registry-1.docker.io/v2/", 'DOCKERHUB_CREDENTIALS') {
-                        docker.image("${IMAGE_NAME}:${IMAGE_TAG}").pull()                    
+                        image.pull()                    
                     }
                 }
                 bat "echo 'Pull Image Finished'"
@@ -73,7 +75,12 @@ pipeline {
                 bat "echo 'Deploy Started'"
                 bat "docker stop ${CONTAINER_NAME} || true"
                 bat "docker rm ${CONTAINER_NAME} || true"
-                bat "docker run --name=${CONTAINER_NAME} -d -p ${CONTAINER_PORT} ${IMAGE_NAME}:${IMAGE_TAG}"
+                // bat "docker run --name=${CONTAINER_NAME} -d -p ${CONTAINER_PORT} ${IMAGE_NAME}:${IMAGE_TAG}"
+                script {
+                        docker.withRegistry("https://registry-1.docker.io/v2/", 'DOCKERHUB_CREDENTIALS') {
+                        image.run("--name=${CONTAINER_NAME} -d -p ${CONTAINER_PORT}")                  
+                    }
+                }
                 bat "echo 'Deploy Finished'"
             }
         }
