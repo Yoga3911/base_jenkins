@@ -29,45 +29,28 @@ pipeline {
                 bat "echo 'Test Finished'"
             }
         }
-        stage("Build Image"){
+        stage("Containerization"){
             steps {
-                bat "echo 'Build Started'"
                 // bat "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
-                script {
-                        docker.withRegistry("https://registry-1.docker.io/v2/", 'DOCKERHUB_CREDENTIALS') {
-                        image = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")                  
-                    }
-                }
-                bat "echo 'Build Finished'"
-            }
-        }
-        stage("Push Image"){
-            steps {
-                bat "echo 'Push Image Started'"
-                script {
-                        docker.withRegistry("https://registry-1.docker.io/v2/", 'DOCKERHUB_CREDENTIALS') {
-                        // docker.image("${IMAGE_NAME}:${IMAGE_TAG}").push()                    
-                        image.push()                    
-                        // image.push("latest")                    
-                    }
-                }
                 // withCredentials([usernamePassword(credentialsId: DOCKERHUB_CREDENTIALS, usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                 //     bat "docker login -u ${USERNAME} -p ${PASSWORD}"
                 //     bat "docker push ${IMAGE_NAME}:${IMAGE_TAG}"
                 // }
-                bat "echo 'Push Image Finished'"
-            }
-        }
-        stage("Pull Image"){
-            steps {
-                bat "echo 'Pull Image Started'"
                 // bat "docker pull ${IMAGE_NAME}:${IMAGE_TAG}"
                 script {
-                        docker.withRegistry("https://registry-1.docker.io/v2/", 'DOCKERHUB_CREDENTIALS') {
+                    docker.withRegistry("https://registry-1.docker.io/v2/", 'DOCKERHUB_CREDENTIALS') {
+                        bat "echo 'Build Started'"
+                        image = docker.build("${IMAGE_NAME}:${IMAGE_TAG}")                  
+                        bat "echo 'Build Finished'"
+                        bat "echo 'Push Image Started'"
+                        image.push()                    
+                        // image.push("latest")                    
+                        bat "echo 'Push Image Finished'"
+                        bat "echo 'Pull Image Started'"
                         image.pull()                    
+                        bat "echo 'Pull Image Finished'"
                     }
                 }
-                bat "echo 'Pull Image Finished'"
             }
         }
         stage("Deploy"){
@@ -85,6 +68,17 @@ pipeline {
                 }
                 bat "echo 'Deploy Finished'"
             }
+        }
+    }
+    post {
+        always {
+            cleanWs()
+        }
+        success {
+            telegramSend(message: 'Build Success', chatId: '-1001183497062')
+        }
+        failure {
+            telegramSend(message: 'Build Failed', chatId: '-1001183497062')
         }
     }
 }
